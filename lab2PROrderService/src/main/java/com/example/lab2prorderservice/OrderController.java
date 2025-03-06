@@ -16,7 +16,7 @@ public class OrderController {
     private Map<Integer, String> orders = new HashMap<>();
     private final RestTemplate restTemplate;
 
-    @Value("${user.service.url}")
+    @Value("${user.service.url:http://user-service:8080/users/}")
     private String userServiceUrl;
 
     public OrderController(RestTemplateBuilder builder) {
@@ -36,6 +36,7 @@ public class OrderController {
     public ResponseEntity<String> createOrder(@RequestParam int userId, @RequestParam String product) {
         ResponseEntity<String> response = restTemplate.getForEntity(userServiceUrl + userId, String.class);
 
+        System.out.println("User service URL: " + userServiceUrl);
         if (response.getStatusCode() == HttpStatus.OK) {
             int id = orders.size() + 1;
             orders.put(id, "Order for user " + userId + ": " + product);
@@ -44,5 +45,6 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User does not exist");
         }
     }
+
 }
 
