@@ -16,9 +16,6 @@ public class OrderController {
     private Map<Integer, String> orders = new HashMap<>();
     private final RestTemplate restTemplate;
 
-    @Value("${user.service.url:http://user-service:8080/users/}")
-    private String userServiceUrl;
-
     public OrderController(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();
     }
@@ -34,6 +31,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<String> createOrder(@RequestParam int userId, @RequestParam String product) {
+        String userServiceUrl = "http://user-service:8080/users/";
         ResponseEntity<String> response = restTemplate.getForEntity(userServiceUrl + userId, String.class);
 
         System.out.println("User service URL: " + userServiceUrl);
